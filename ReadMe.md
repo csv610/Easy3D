@@ -81,14 +81,69 @@ Guidelines:
 - Follow C++14/17 best practices
 - Ensure macOS M1 compatibility
 
+## Distinctive Features
+
+Easy3D stands out among geometry processing libraries for several reasons:
+
+### All-in-One Solution
+Unlike CGAL (algorithms only) or libIGL (algorithms only), Easy3D provides:
+- **Data structures** for point clouds, surface meshes, poly meshes, and graphs
+- **Algorithms** for geometry processing (reconstruction, simplification, smoothing, etc.)
+- **Rendering** with modern OpenGL shaders (no fixed-function pipeline)
+
+### Built-in Rendering
+- Point/line imposters with hardware acceleration
+- Ambient occlusion (SSAO), hard/soft shadows
+- Eye-dome lighting for point clouds without normals
+- Transparency (average color blending, dual depth peeling)
+- Cross-platform viewer supporting GLFW, Qt, and wxWidgets
+
+### Educational & Production-Ready
+- Extensive tutorials with detailed code explanations
+- Well-documented API
+- Ready-to-use GUI application (Mapple)
+- 20+ command-line tools for common tasks
+
+### Minimal Dependencies
+- Core requires only CMake and a C++11 compiler
+- Optional: CGAL (advanced algorithms), Qt (GUI)
+- Bundled 3rd-party sources for easy building
+
+## Why Adopt Easy3D?
+
+| Reason | Description |
+|--------|-------------|
+| **Quick Prototyping** | Few lines of code to load, process, and visualize 3D data |
+| **Learning Curve** | Gentle - great for students learning 3D graphics |
+| **Single Library** | No need to combine multiple libraries for geometry + rendering |
+| **Modern C++** | Clean API with smart pointers, no raw memory management |
+| **macOS M1 Ready** | Native ARM64 support, optimized for Apple Silicon |
+| **CLI-First** | Perfect for batch processing and pipelines |
+
 ## Comparison with Other Libraries
 
 | Feature | Easy3D-M1 | CGAL | libIGL | PCL |
 |---------|-----------|------|--------|-----|
-| **Rendering** | Built-in OpenGL | None | None | Basic |
-| **Ease of Use** | High | Complex | Medium | Steep |
-| **CLI Focus** | Yes | No | No | Partial |
-| **Dependencies** | Minimal | Heavy | Eigen | VTK/Boost |
+| **Primary Focus** | All-in-one | Computational Geometry | Geometry Algorithms | Point Cloud Processing |
+| **Rendering** | Built-in OpenGL + shaders | None | None (matplotlib/MATLAB) | Basic PCL Viewer |
+| **Data Structures** | Point cloud, mesh, graph, volume | Complex geometric kernels | Minimal mesh | Octrees, point clouds |
+| **Ease of Use** | Very High | Complex | Medium | Steep |
+| **Dependencies** | Minimal | Boost, GMP, MPFR | Eigen | VTK, Boost, FLANN |
+| **Learning Curve** | Low | High | Medium | High |
+| **GUI/Viewer** | Built-in (GLFW/Qt/wxWidgets) | None | None | PCL Viewer |
+| **CLI Tools** | 20+ ready-to-use | None | None | Partial |
+| **Target Platform** | macOS M1 (ARM64) | Cross-platform | Cross-platform | Cross-platform |
+
+### When to Choose Easy3D-M1:
+- You need **both** geometry processing **and** visualization
+- You want **quick results** with minimal code
+- You prefer **CLI tools** for batch processing
+- You're on **macOS M1** and need native performance
+
+### When to Choose Alternatives:
+- **CGAL**: When you need exact arithmetic and advanced computational geometry
+- **libIGL**: When you want header-only and prefer Python prototyping
+- **PCL**: When your primary focus is point cloud robotics/vision
 
 ## License
 
