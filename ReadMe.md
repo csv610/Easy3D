@@ -1,12 +1,45 @@
 <p align="right">
-    <b> <img src="https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-green" title="Supported Platforms"/> </b> <br>
+    <b> <img src="https://img.shields.io/badge/platforms-macOS%20M1-blue" title="Platform: macOS M1"/> </b> <br>
     <b> <img src="https://img.shields.io/badge/license-GPL-blue" title="license-GPL"/> </b> <br>
 </p>
 
 ![3D model generated and rendered by Easy3D](resources/images/logo.jpg)
 
-#### Easy3D is an open-source library for 3D modeling, geometry processing, and rendering. It is implemented in C++ and designed with an emphasis on simplicity and efficiency. Easy3D is intended for research and educational purposes, but it is also a good starting point for developing sophisticated 3D applications. 
-Compared to existing geometry processing libraries (such as [PMP](http://www.pmp-library.org/) and [libigl](https://github.com/libigl/libigl/)) that focus on the algorithm aspect, Easy3D also provides a wider range of functionalities for user interactions and rendering.
+#### Easy3D-M1 is a port of the original [Easy3D](https://github.com/LiangliangNan/Easy3D) library for macOS M1 (Apple Silicon). This version is optimized for ARM-based Macs and focuses on command-line applications using modern C++ with smart pointers.
+
+Easy3D is an open-source library for 3D modeling, geometry processing, and rendering. It is implemented in C++ and designed with an emphasis on simplicity and efficiency. Easy3D is intended for research and educational purposes, but it is also a good starting point for developing sophisticated 3D applications.
+
+### Distinct Features of Easy3D
+
+Easy3D occupies a unique position among 3D geometry processing libraries. Here is how it compares with major alternatives:
+
+| Feature | Easy3D | [CGAL](https://www.cgal.org/) | [libIGL](https://github.com/libigl/libigl/) | [PCL](https://pointclouds.org/) |
+|---------|--------|-------------------------------|---------------------------------------------|--------------------------------|
+| **Primary Focus** | All-in-one: geometry + rendering + interaction | Computational geometry with exact arithmetic | Geometry processing algorithms | 3D point cloud processing |
+| **Rendering** | Built-in OpenGL + shaders | No native rendering | No native rendering (depends on matplotlib/MATLAB) | Basic visualization |
+| **Data Structures** | Point cloud, surface mesh, poly mesh, graph | Complex geometric kernels | Minimal mesh representation | Point clouds, octrees |
+| **Ease of Use** | Very high (few lines to get started) | Medium (complex API) | Medium (header-only but verbose) | Medium (steep learning curve) |
+| **Dependencies** | Minimal (optional CGAL/Qt) | Boost, GMP, MPFR | Eigen | VTK, Boost, FLANN |
+| **Learning Curve** | Low | High | Medium | High |
+| **GUI/Viewer** | Built-in viewer + Mapple | None | None | PCL Viewer |
+
+**Easy3D's advantages:**
+- **All-in-one solution**: Unlike CGAL (algorithms only) or libIGL (algorithms only), Easy3D provides rendering out of the box
+- **Modern OpenGL**: Uses programmable shaders, not deprecated fixed-function pipeline
+- **Cross-platform viewer**: Supports GLFW, Qt, and wxWidgets
+- **Mapple**: A full-featured GUI application built on Easy3D
+- **Educational**: Extensive tutorials and well-documented code
+
+### Contributing
+
+Contributions are welcome! This port focuses on CLI applications using smart pointers for memory safety. To contribute:
+
+1. Write command-line applications that demonstrate Easy3D's algorithms
+2. Use `std::unique_ptr` and `std::shared_ptr` for all dynamic memory management
+3. Follow modern C++ best practices (C++14/17)
+4. Ensure compatibility with macOS M1 (ARM64)
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 <p align="center"> 
      <img src="./resources/images/overview.jpg" width="600"> 
