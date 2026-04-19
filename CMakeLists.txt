@@ -73,15 +73,15 @@ option(Easy3D_BUILD_SHARED_LIBS "Build shared libaries"         ON)
 # Build tutorials
 option(Easy3D_BUILD_TUTORIALS "Build Easy3D tutorials"          ON)
 # Build documentation
-option(Easy3D_BUILD_DOCUMENTATION "Build Easy3D documentation"  OFF)
+option(Easy3D_BUILD_DOCUMENTATION "Build Easy3D documentation"  ON)
 # Build tests
-option(Easy3D_BUILD_TESTS "Build Easy3D tests programs"         OFF)
+option(Easy3D_BUILD_TESTS "Build Easy3D tests programs"         ON)
 # Build advanced features that require CGAL (>= v5.1)
-option(Easy3D_ENABLE_CGAL "Build advanced features that require CGAL (>= v5.1)"              OFF)
+option(Easy3D_ENABLE_CGAL "Build advanced features that require CGAL (>= v5.1)"              ON)
 # Build advanced examples/applications that require Qt5 (>= v5.6)
 option(Easy3D_ENABLE_QT "Build advanced examples/applications that require Qt5 (>= v5.6)"    OFF)
 # Build the video encoding module that requires ffmpeg
-option(Easy3D_ENABLE_FFMPEG "Build the video encoding module that requires ffmpeg (>= v3.4)" OFF)
+option(Easy3D_ENABLE_FFMPEG "Build the video encoding module that requires ffmpeg (>= v3.4)" ON)
 
 ################################################################################
 
@@ -329,6 +329,16 @@ message(STATUS "    Build tests            :  ${Easy3D_BUILD_TESTS}")
 message(STATUS "    With CGAL (>= v5.1)    :  ${Easy3D_ENABLE_CGAL}")
 message(STATUS "    With Qt5 (>= v5.6)     :  ${Easy3D_ENABLE_QT}")
 message(STATUS "    With ffmpeg (>= v3.4)  :  ${Easy3D_ENABLE_FFMPEG}")
+
+message(STATUS "----------------------------------------------------------------------------")
+
+message(STATUS "    Build directory        :  ${Easy3D_BINARY_DIR}")
+message(STATUS "    Installation directory :  ${CMAKE_INSTALL_PREFIX}")
+
+message(STATUS "****************************************************************************")
+
+
+y3D_ENABLE_FFMPEG}")
 
 message(STATUS "----------------------------------------------------------------------------")
 

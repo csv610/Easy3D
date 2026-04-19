@@ -66,26 +66,24 @@ The `applications/` directory contains a comprehensive set of command-line tools
 
 ## Building
 
+Easy3D-M1 defaults to **Release** build with **Tests**, **Documentation**, **CGAL**, and **FFmpeg** support enabled.
+
 ```bash
 cd Easy3D
 mkdir build && cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake ..
 make -j$(sysctl -n hw.ncpu)
 ```
 
 ## Testing
 
-To build and run the unit tests:
+To run the unit tests:
 
-1. Enable testing during configuration:
-   ```bash
-   cmake -DEasy3D_BUILD_TESTS=ON ..
-   ```
-2. Build the tests:
+1. Build the tests (enabled by default):
    ```bash
    make Tests -j$(sysctl -n hw.ncpu)
    ```
-3. Run the tests:
+2. Run the tests:
    ```bash
    ./bin/Tests
    ```
