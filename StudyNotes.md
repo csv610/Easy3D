@@ -69,6 +69,33 @@ Where:
 
 ---
 
+## Mesh Smoothing vs. Mesh Fairing
+
+While both techniques involve modifying the mesh geometry to improve "smoothness," they differ in their goals and mathematical approaches.
+
+| Feature | Mesh Smoothing | Mesh Fairing |
+|---------|----------------|--------------|
+| **Primary Goal** | Noise removal (denoising). | Creating Aesthetic/Minimal surfaces. |
+| **Local vs Global**| Usually local (diffusion/flow). | Usually global (solving PDEs). |
+| **Constraint** | Stays close to original geometry. | Boundary conditions (locked vertices). |
+| **Equations** | Diffusion Equation / Curvature Flow. | k-Harmonic Equations ($\Delta^k p = 0$). |
+| **Common Method**| Laplacian Smoothing (Explicit/Implicit). | Minimizing area or curvature energy. |
+
+### 1. Mesh Smoothing (`SurfaceMeshSmoothing`)
+Smoothing is typically used to remove high-frequency noise while preserving the overall shape. 
+*   **Explicit Smoothing:** Iteratively moves each vertex toward the average of its neighbors. 
+    *   *Risk:* Can cause significant shrinkage if many iterations are performed.
+*   **Implicit Smoothing:** Formulated as a diffusion process. It is more stable than explicit smoothing and allows for larger time steps without crashing.
+*   **Mean Curvature Flow:** Vertices move in the direction of the surface normal with a speed proportional to the mean curvature.
+
+### 2. Mesh Fairing (`SurfaceMeshFairing`)
+Fairing is the process of generating a surface that is "as smooth as possible" given certain boundary constraints.
+*   **Minimize Area:** Solves the harmonic equation ($\Delta p = 0$). The result is a membrane-like surface (minimal surface).
+*   **Minimize Curvature:** Solves the bi-harmonic equation ($\Delta^2 p = 0$). The result is a thin-plate-like surface that is smoother at boundaries.
+*   **k-Harmonic Fairing:** Easy3D allows solving for arbitrary $k$. Higher $k$ values result in smoother transitions at the boundary conditions.
+
+---
+
 ## Winding Numbers and Winding Rules
 
 The **Winding Number** is a fundamental concept in topology used to determine if a point lies inside or outside a closed curve (2D) or a closed surface (3D). It counts the number of times a curve travels counter-clockwise around a given point.
@@ -114,3 +141,4 @@ The `Tessellator` and `csg::tessellate` utilities use winding rules to handle co
 - *Cohen-Steiner, D., and Morvan, J-M. "Restricted Delaunay triangulations and normal cycle." 2003.*
 - *Meyer, M. et al. "Discrete Differential-Geometry Operators for Triangulated 2-Manifolds." 2003.*
 - *Barill, G. et al. "Fast Winding Numbers for Soups and Clouds." 2018.*
+- *Desbrun, M. et al. "Implicit fairing of irregular meshes using diffusion and curvature flow." 1999.*
