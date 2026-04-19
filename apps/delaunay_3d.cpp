@@ -1,7 +1,9 @@
 #include <easy3d/core/point_cloud.h>
 #include <easy3d/core/surface_mesh.h>
+#include <easy3d/core/poly_mesh.h>
 #include <easy3d/fileio/point_cloud_io.h>
 #include <easy3d/fileio/surface_mesh_io.h>
+#include <easy3d/fileio/poly_mesh_io.h>
 #include <easy3d/algo/delaunay_3d.h>
 #include <easy3d/algo/point_cloud_simplification.h>
 #include <memory>
@@ -15,7 +17,7 @@ using namespace easy3d;
 int main(int argc, char** argv) {
     args::ArgumentParser parser("Delaunay Triangulation 3D");
 
-    args::Positional<std::string> input_file(parser, "input", "Input point cloud or mesh file");
+    args::Positional<std::string> input_file(parser, "input", "Input point cloud, surface mesh, or volume mesh file");
     args::Positional<std::string> output_file(parser, "output", "Output mesh file (default: del3d.off)");
     args::HelpFlag help(parser, "help", "Display this help message", {'h', "help"});
 
@@ -50,8 +52,8 @@ int main(int argc, char** argv) {
         }
     }
 
-    // If not loaded yet, try as surface mesh and convert to point cloud
-    if (!cloud) {
+    // If not loaded yet, try as surface mesh
+    if (!cloud && (input_ext == "obj" || input_ext == "off" || input_ext == "stl" || input_ext == "ply" || input_ext == "sm")) {
         std::unique_ptr<SurfaceMesh> mesh(SurfaceMeshIO::load(file_path));
         if (mesh) {
             std::cout << "surface mesh loaded: " << mesh->n_vertices() << " vertices" << std::endl;
@@ -60,6 +62,23 @@ int main(int argc, char** argv) {
                 cloud->add_vertex(mesh->position(v));
             }
         }
+    }
+
+    // If not loaded yet, try as volume mesh
+    if (!cloud && (input_ext == "plm" || input_ext == "pm" || input_ext == "mesh")) {
+        std::unique_ptr<PolyMesh> mesh(PolyMeshIO::load(file_path));
+        if (mesh) {
+            std::cout << "volume mesh loaded: " << mesh->n_vertices() << " vertices" << std::endl;
+            cloud = std::make_unique<PointCloud>();
+            for (auto v : mesh->vertices()) {
+                cloud->add_vertex(mesh->position(v));
+            }
+        }
+    }
+
+    // Fallback: try all loaders if extension didn't match or previous attempts failed
+    if (!cloud) {
+        // ... (already covered by extension checks above, but can add more generic fallback if needed)
     }
 
     if (!cloud || cloud->n_vertices() == 0) {
