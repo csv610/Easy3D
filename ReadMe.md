@@ -25,20 +25,44 @@ This port differs from the original:
 
 ## CLI Applications
 
-The `applications/` directory contains command-line tools:
+The `applications/` directory contains a comprehensive set of command-line tools for 3D data processing:
 
+### Input / Output
 | Tool | Description |
 |------|-------------|
-| `point_cloud_io` | Read/write point cloud files |
-| `surface_mesh_io` | Read/write surface mesh files |
-| `normal_estimation` | Estimate point cloud normals |
-| `surface_reconstruction` | Poisson surface reconstruction |
-| `plane_extraction` | RANSAC-based plane extraction |
-| `point_cloud_downsampling` | Voxel grid downsampling |
-| `mesh_simplification` | Simplify surface meshes |
-| `mesh_smoothing` | Smooth surface meshes |
-| `mesh_remeshing` | Remesh surface meshes |
-| And more... |
+| `point_cloud_io` | Read/write point cloud files (PLY, OBJ, OFF, etc.) |
+| `surface_mesh_io` | Read/write surface mesh files (PLY, OBJ, OFF, etc.) |
+
+### Point Cloud Processing
+| Tool | Description |
+|------|-------------|
+| `normal_estimation` | Estimate normals for point clouds |
+| `point_cloud_downsampling` | Voxel-grid based downsampling |
+| `plane_extraction` | RANSAC-based plane extraction from point clouds |
+| `surface_reconstruction` | Poisson surface reconstruction from oriented points |
+
+### Mesh Processing
+| Tool | Description |
+|------|-------------|
+| `mesh_simplification` | Decimate surface meshes while preserving geometry |
+| `mesh_smoothing` | Reduce noise in surface meshes (Laplacian, Taubin, etc.) |
+| `mesh_remeshing` | Improve mesh quality through incremental remeshing |
+| `mesh_hole_filling` | Automatically detect and fill holes in surface meshes |
+| `mesh_fairing` | Smooth surface meshes while preserving boundary |
+| `mesh_triangulation` | Convert general polygons to triangles |
+| `mesh_subdivision` | Increase mesh resolution (Catmull-Clark, Loop, etc.) |
+| `mesh_parameterization` | Map 3D meshes to 2D domains (UV mapping) |
+| `mesh_sampling` | Generate points on mesh surfaces |
+| `mesh_curvature` | Compute Gaussian, mean, and principal curvatures |
+| `mesh_stitching` | Stitch multiple surface meshes together |
+| `tetrahedralization` | Generate tetrahedral meshes from surface boundaries |
+
+### Geometry & Triangulation
+| Tool | Description |
+|------|-------------|
+| `delaunay_2d` | Compute 2D Delaunay triangulation |
+| `delaunay_3d` | Compute 3D Delaunay triangulation |
+| `polygon_partition` | Partition polygons into convex pieces |
 
 ## Building
 
