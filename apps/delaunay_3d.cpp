@@ -15,6 +15,7 @@ int main(int argc, char** argv) {
     args::ArgumentParser parser("Delaunay Triangulation 3D");
 
     args::Positional<std::string> input_file(parser, "input", "Input point cloud or mesh file");
+    args::Positional<std::string> output_file(parser, "output", "Output mesh file (default: convex.off)");
     args::HelpFlag help(parser, "help", "Display this help message", {'h', "help"});
 
     try {
@@ -73,8 +74,42 @@ int main(int argc, char** argv) {
     std::cout << "  vertices: " << delaunay.nb_vertices() << std::endl;
     std::cout << "  tetrahedra: " << delaunay.nb_tets() << std::endl;
 
-    std::cout << "Note: 3D Delaunay mesh is computed in memory. Use other tools to convert to file." << std::endl;
-    std::cout << "To save as surface mesh, convert the boundary faces to a SurfaceMesh." << std::endl;
+    std::cout << "extracting boundary (convex hull)..." << std::endl;
+    std::unique_ptr<SurfaceMesh> out_mesh(new SurfaceMesh);
+    // Add all vertices to the output mesh
+    for (unsigned int i = 0; i < delaunay.nb_vertices(); ++i) {
+        out_mesh->add_vertex(delaunay.vertex(i));
+    }
+
+    // Extract boundary faces: faces of tetrahedra that have no adjacent tetrahedron
+    int nb_boundary_faces = 0;
+    for (unsigned int t = 0; t < delaunay.nb_tets(); ++t) {
+        for (unsigned int f = 0; f < 4; ++f) {
+            if (delaunay.tet_adjacent(t, f) < 0) {
+                // This facet is on the boundary
+                out_mesh->add_triangle(
+                    SurfaceMesh::Vertex(delaunay.tet_facet_vertex(t, f, 0)),
+                    SurfaceMesh::Vertex(delaunay.tet_facet_vertex(t, f, 1)),
+                    SurfaceMesh::Vertex(delaunay.tet_facet_vertex(t, f, 2))
+                );
+                nb_boundary_faces++;
+            }
+        }
+    }
+    std::cout << "  boundary faces: " << nb_boundary_faces << std::endl;
+
+    std::string out_path;
+    if (output_file) {
+        out_path = args::get(output_file);
+    } else {
+        out_path = "convex.off";
+    }
+
+    if (SurfaceMeshIO::save(out_path, out_mesh.get())) {
+        std::cout << "saved boundary to: " << out_path << std::endl;
+    } else {
+        std::cerr << "failed to save boundary to: " << out_path << std::endl;
+    }
 
     return EXIT_SUCCESS;
 }
