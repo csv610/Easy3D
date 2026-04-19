@@ -27,6 +27,7 @@
 #include <easy3d/core/point_cloud.h>
 #include <easy3d/core/random.h>
 #include <easy3d/util/initializer.h>
+#include <memory>
 
 using namespace easy3d;
 
@@ -44,7 +45,7 @@ int main(int argc, char** argv) {
 	srand(0);
 
 	// Create a point cloud.
-	auto cloud = new PointCloud;
+	auto cloud = std::make_unique<PointCloud>();
 
 	// Add some points. Here we add 100 points on a 10*10 grid.
 	for (int i=-5; i<5; ++i) {
@@ -75,9 +76,6 @@ int main(int argc, char** argv) {
 	auto points = cloud->get_vertex_property<vec3>("v:point");
 	for (auto v : cloud->vertices())
 		std::cout << "index: " << v.idx() << ", xyz: " << points[v] << ", color: " << colors[v] << std::endl;
-
-	// delete the point cloud (i.e., release memory)
-	delete cloud;
 
     return EXIT_SUCCESS;
 }

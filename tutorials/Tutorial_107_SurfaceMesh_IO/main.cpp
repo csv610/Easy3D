@@ -28,6 +28,7 @@
 #include <easy3d/fileio/surface_mesh_io.h>
 #include <easy3d/util/resource.h>
 #include <easy3d/util/initializer.h>
+#include <memory>
 
 
 using namespace easy3d;
@@ -44,7 +45,7 @@ int main(int argc, char** argv) {
 
 	// Read a mesh specified by its file name
     const std::string file_name = resource::directory() + "/data/sphere.obj";
-    SurfaceMesh* mesh = SurfaceMeshIO::load(file_name);
+    auto mesh = std::unique_ptr<SurfaceMesh>(SurfaceMeshIO::load(file_name));
     if (!mesh) {
         LOG(ERROR) << "failed to load model. Please make sure the file exists and format is correct.";
         return EXIT_FAILURE;
@@ -60,13 +61,10 @@ int main(int argc, char** argv) {
 
 	// Write the mesh to a new file.
     const std::string save_file_name = "./sphere-copy.obj";
-    if (SurfaceMeshIO::save(save_file_name, mesh))
+    if (SurfaceMeshIO::save(save_file_name, mesh.get()))
         std::cout << "mesh saved to \'" << save_file_name << "\'" << std::endl;
     else
         std::cerr << "failed create the new file" << std::endl;
-
-	// delete the mesh (i.e., release memory)
-	delete mesh;
 
     return EXIT_SUCCESS;
 }

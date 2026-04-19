@@ -26,6 +26,7 @@
 
 #include <easy3d/core/point_cloud.h>
 #include <easy3d/util/initializer.h>
+#include <memory>
 
 using namespace easy3d;
 
@@ -40,7 +41,7 @@ int main(int argc, char** argv) {
     initialize();
 
 	// Create a point cloud
-	auto cloud = new PointCloud;
+	auto cloud = std::make_unique<PointCloud>();
 
 	// Add some points. Here we add 100 points on a 10*10 grid.
 	for (int i=-5; i<5; ++i) {
@@ -48,9 +49,6 @@ int main(int argc, char** argv) {
 			cloud->add_vertex(vec3(static_cast<float>(i), static_cast<float>(j), 0));// z = 0: all points are on XY plane
 	}
 	std::cout << "point cloud has " << cloud->n_vertices() << " points" << std::endl;
-
-	// Delete the point cloud (i.e., release memory)
-	delete cloud;
 
     return EXIT_SUCCESS;
 }

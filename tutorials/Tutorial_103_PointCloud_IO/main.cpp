@@ -28,6 +28,7 @@
 #include <easy3d/fileio/point_cloud_io.h>
 #include <easy3d/util/resource.h>
 #include <easy3d/util/initializer.h>
+#include <memory>
 
 
 using namespace easy3d;
@@ -43,7 +44,10 @@ int main(int argc, char** argv) {
     initialize();
 
 	// Read the point cloud from a known file. 
-    PointCloud* cloud = PointCloudIO::load(resource::directory() + "/data/bunny.bin");
+    auto cloud = std::unique_ptr<PointCloud>(
+        PointCloudIO::load(resource::directory() + "/data/bunny.bin")
+    );
+
     if (!cloud) {
         LOG(ERROR) << "failed to load model. Please make sure the file exists and format is correct.";
         return EXIT_FAILURE;
@@ -74,9 +78,6 @@ int main(int argc, char** argv) {
         }
         std::cout << "point cloud saved to './bunny-copy.txt'" << std::endl;
     }
-
-    // Delete the point cloud (i.e., release memory)
-    delete cloud;
 
     return EXIT_SUCCESS;
 }

@@ -26,6 +26,7 @@
 
 #include <easy3d/core/surface_mesh.h>
 #include <easy3d/util/initializer.h>
+#include <memory>
 
 
 using namespace easy3d;
@@ -47,9 +48,9 @@ using namespace easy3d;
 #define USE_FOR_LOOP
 
 // the mesh created in the previous tutorial (so you can skip it)
-SurfaceMesh* old_mesh_from_previous_example() {
+std::unique_ptr<SurfaceMesh> old_mesh_from_previous_example() {
 	// Create a surface mesh
-	auto mesh = new SurfaceMesh;
+	auto mesh = std::make_unique<SurfaceMesh>();
 
 	// Add 4 vertices
 	SurfaceMesh::Vertex v0 = mesh->add_vertex(vec3(0, 0, 0));
@@ -71,7 +72,7 @@ int main(int argc, char** argv) {
     // initialize Easy3D.
     initialize();
 
-	SurfaceMesh* mesh = old_mesh_from_previous_example();
+	auto mesh = old_mesh_from_previous_example();
 	
     std::cout << "----------------------------------------\n";
     std::cout << "The incident vertices of each vertex" << std::endl;
@@ -222,9 +223,6 @@ int main(int argc, char** argv) {
 
 		std::cout << std::endl;
 	}
-
-	// Delete the mesh (i.e., release memory)
-	delete mesh;
 
     return EXIT_SUCCESS;
 }

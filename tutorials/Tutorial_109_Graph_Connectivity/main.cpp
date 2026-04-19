@@ -26,6 +26,7 @@
 
 #include <easy3d/core/graph.h>
 #include <easy3d/util/initializer.h>
+#include <memory>
 
 
 using namespace easy3d;
@@ -41,9 +42,9 @@ using namespace easy3d;
 #define USE_FOR_LOOP
 
 // the graph created in the previous tutorial (so you can skip it)
-Graph* old_graph_from_previous_example() {
+std::unique_ptr<Graph> old_graph_from_previous_example() {
     // Create a graph
-    auto graph = new Graph;
+    auto graph = std::make_unique<Graph>();
 
     // Add 4 vertices
     Graph::Vertex v0 = graph->add_vertex(vec3(0, 0, 0));
@@ -66,7 +67,7 @@ int main(int argc, char** argv) {
     // initialize Easy3D.
     initialize();
 
-    Graph* graph = old_graph_from_previous_example();
+    auto graph = old_graph_from_previous_example();
 
     std::cout << "----------------------------------------\n";
     std::cout << "The incident vertices of each vertex" << std::endl;
@@ -126,9 +127,6 @@ int main(int argc, char** argv) {
         Graph::Vertex vt = graph->vertex(e, 1);
         std::cout << vt << " " << std::endl;
     }
-
-    // Delete the graph (i.e., release memory)
-    delete graph;
 
     return EXIT_SUCCESS;
 }

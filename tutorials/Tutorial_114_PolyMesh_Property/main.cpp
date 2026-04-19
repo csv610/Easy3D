@@ -26,6 +26,7 @@
 
 #include <easy3d/core/poly_mesh.h>
 #include <easy3d/util/initializer.h>
+#include <memory>
 
 
 using namespace easy3d;
@@ -36,9 +37,9 @@ using namespace easy3d;
 
 
 // the mesh created in the previous tutorial (so you can skip it)
-PolyMesh *old_mesh_from_previous_example() {
+std::unique_ptr<PolyMesh> old_mesh_from_previous_example() {
     // Create a polyhedral mesh
-    auto mesh = new PolyMesh;
+    auto mesh = std::make_unique<PolyMesh>();
 
     // Add four vertices
     auto v0 = mesh->add_vertex(vec3(-1.0, 0.0, 0.0));
@@ -58,7 +59,7 @@ int main(int argc, char** argv) {
     initialize();
 
     // Create mesh object
-    PolyMesh *mesh = old_mesh_from_previous_example();
+    auto mesh = old_mesh_from_previous_example();
 
 	// We add a per-face property "f:normal" storing the normal of each face
     PolyMesh::FaceProperty<vec3> center = mesh->add_face_property<vec3>("f:center");
@@ -75,8 +76,6 @@ int main(int argc, char** argv) {
     for (auto f : mesh->faces()) {
         std::cout << "center of " << f << ": " << center[f] << std::endl;
     }
-
-	delete mesh;
 
     return EXIT_SUCCESS;
 }

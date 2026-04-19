@@ -26,6 +26,7 @@
 
 #include <easy3d/core/graph.h>
 #include <easy3d/util/initializer.h>
+#include <memory>
 
 
 using namespace easy3d;
@@ -37,9 +38,9 @@ using namespace easy3d;
 //
 
 // the graph created in the previous tutorial (so you can skip it)
-Graph* old_graph_from_previous_example() {
+std::unique_ptr<Graph> old_graph_from_previous_example() {
 	// Create a graph
-	auto graph = new Graph;
+	auto graph = std::make_unique<Graph>();
 
 	// Add 4 vertices
 	Graph::Vertex v0 = graph->add_vertex(vec3(0, 0, 0));
@@ -62,7 +63,7 @@ int main(int argc, char** argv) {
     // initialize Easy3D.
     initialize();
 
-	Graph* graph = old_graph_from_previous_example();
+	auto graph = old_graph_from_previous_example();
 
 	auto points = graph->vertex_property<vec3>("v:point");
 
@@ -81,8 +82,6 @@ int main(int argc, char** argv) {
         lengths[e] = graph->edge_length(e);
         std::cout << "edge: " << e << ", length: " << lengths[e] << std::endl;
     }
-
-	delete graph;
 
     return EXIT_SUCCESS;
 }

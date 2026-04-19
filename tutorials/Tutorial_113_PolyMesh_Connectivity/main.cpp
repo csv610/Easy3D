@@ -26,6 +26,7 @@
 
 #include <easy3d/core/poly_mesh.h>
 #include <easy3d/util/initializer.h>
+#include <memory>
 
 
 using namespace easy3d;
@@ -51,9 +52,9 @@ using namespace easy3d;
 
 
 // the mesh created in the previous tutorial (so you can skip it)
-PolyMesh *old_mesh_from_previous_example() {
+std::unique_ptr<PolyMesh> old_mesh_from_previous_example() {
     // Create a polyhedral mesh
-    auto mesh = new PolyMesh;
+    auto mesh = std::make_unique<PolyMesh>();
 
     // Add four vertices
     auto v0 = mesh->add_vertex(vec3(-1.0, 0.0, 0.0));
@@ -72,7 +73,7 @@ int main(int argc, char **argv) {
     initialize();
 
     // Create mesh object
-    PolyMesh *mesh = old_mesh_from_previous_example();
+    auto mesh = old_mesh_from_previous_example();
 
     std::cout << "----------------------------------------\n";
     std::cout << "The incident vertices of each vertex" << std::endl;

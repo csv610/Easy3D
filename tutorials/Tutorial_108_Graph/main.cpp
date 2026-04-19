@@ -26,6 +26,7 @@
 
 #include <easy3d/core/graph.h>
 #include <easy3d/util/initializer.h>
+#include <memory>
 
 
 using namespace easy3d;
@@ -40,7 +41,7 @@ int main(int argc, char** argv) {
     initialize();
 
     // Create a graph
-    auto graph = new Graph;
+    auto graph = std::make_unique<Graph>();
 
 	// Add 4 vertices
     Graph::Vertex v0 = graph->add_vertex(vec3(0, 0, 0));
@@ -57,9 +58,6 @@ int main(int argc, char** argv) {
 
     std::cout << "vertices: " << graph->n_vertices() << std::endl;
     std::cout << "edges: " << graph->n_edges() << std::endl;
-
-    // Delete the graph (i.e., release memory)
-    delete graph;
 
     return EXIT_SUCCESS;
 }

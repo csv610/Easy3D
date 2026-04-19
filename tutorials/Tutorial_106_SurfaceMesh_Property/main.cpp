@@ -26,6 +26,7 @@
 
 #include <easy3d/core/surface_mesh.h>
 #include <easy3d/util/initializer.h>
+#include <memory>
 
 
 using namespace easy3d;
@@ -35,9 +36,9 @@ using namespace easy3d;
 // We use per-face properties as example, you should be able to do similarly for per-edge/vertex properties also.
 
 
-SurfaceMesh* old_mesh_from_previous_example() {
+std::unique_ptr<SurfaceMesh> old_mesh_from_previous_example() {
 	// Create a surface mesh
-	auto mesh = new SurfaceMesh;
+	auto mesh = std::make_unique<SurfaceMesh>();
 
 	// Add 4 vertices
 	SurfaceMesh::Vertex v0 = mesh->add_vertex(vec3(0, 0, 0));
@@ -59,7 +60,7 @@ int main(int argc, char** argv) {
     initialize();
 
     // The mesh created from the previous tutorial.
-	SurfaceMesh* mesh = old_mesh_from_previous_example();
+	auto mesh = old_mesh_from_previous_example();
 
 	// We add a per-face property "f:normal" storing the normal of each face
 	SurfaceMesh::FaceProperty<vec3> normals = mesh->add_face_property<vec3>("f:normal");
@@ -72,8 +73,6 @@ int main(int argc, char** argv) {
 		normals[f] = mesh->compute_face_normal(f);
 		std::cout << "normal of face " << f << ": " << normals[f] << std::endl;
 	}
-
-	delete mesh;
 
     return EXIT_SUCCESS;
 }
