@@ -87,3 +87,7 @@ target_link_libraries(Tests 3rd_imgui easy3d::util easy3d::core easy3d::fileio e
 if (Easy3D_HAS_CGAL)
     target_link_libraries(Tests easy3d::algo_ext)
 endif ()
+
+add_executable(test_delaunay_duplicates test_delaunay_duplicates.cpp)
+target_link_libraries(test_delaunay_duplicates easy3d::algo easy3d::util)
+set_target_properties(test_delaunay_duplicates PROPERTIES FOLDER "tests")
