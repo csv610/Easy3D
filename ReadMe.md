@@ -73,6 +73,25 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j$(sysctl -n hw.ncpu)
 ```
 
+## Testing
+
+To build and run the unit tests:
+
+1. Enable testing during configuration:
+   ```bash
+   cmake -DEasy3D_BUILD_TESTS=ON ..
+   ```
+2. Build the tests:
+   ```bash
+   make Tests -j$(sysctl -n hw.ncpu)
+   ```
+3. Run the tests:
+   ```bash
+   ./bin/Tests
+   ```
+
+Note: Some tests are automated, while others open a window for visual verification or require user interaction.
+
 ## Contributing
 
 Contribute by writing CLI applications using smart pointers:
