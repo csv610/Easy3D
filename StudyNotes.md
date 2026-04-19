@@ -67,21 +67,50 @@ Where:
 *   $\vec{e}$: The unit vector in the direction of edge $e$.
 *   $\vec{e} \otimes \vec{e}$: The outer product (tensor product), resulting in a $3 \times 3$ symmetric matrix.
 
-### Why it is Robust
+---
 
-1.  **Averaging:** Unlike the cotangent-weight method which can be sensitive to mesh quality, the Normal Cycle method integrates information over a local region, making it more stable against noise.
-2.  **Tensor Representation:** It provides a full $3 \times 3$ matrix representing the local shape operator.
-3.  **Convergence:** It is mathematically proven to converge to the true curvature tensor as the mesh resolution increases under certain geometric conditions.
+## Winding Numbers and Winding Rules
+
+The **Winding Number** is a fundamental concept in topology used to determine if a point lies inside or outside a closed curve (2D) or a closed surface (3D). It counts the number of times a curve travels counter-clockwise around a given point.
+
+### 2D Winding Rules
+
+In complex polygons with self-intersections or multiple nested contours, the winding number is used to define which regions are "inside" the polygon. The `Tessellator` class in Easy3D implements the following rules:
+
+*   **WINDING_ODD (Default):** A point is inside if its winding number is odd. This is the standard rule for most simple polygons and creates "holes" in nested structures.
+*   **WINDING_NONZERO:** A point is inside if its winding number is not zero. This is commonly used for union operations of multiple contours.
+*   **WINDING_POSITIVE:** A point is inside if its winding number is greater than zero.
+*   **WINDING_NEGATIVE:** A point is inside if its winding number is less than zero.
+*   **WINDING_ABS_GEQ_TWO:** A point is inside if the absolute value of its winding number is 2 or greater (used for finding intersection regions).
+
+### 3D Generalized Winding Number
+
+While 2D winding numbers are straightforward, the **Generalized Winding Number** (Barill et al. 2018) extends this to 3D meshes that may not be perfectly watertight (i.e., containing holes, self-intersections, or degenerate geometry).
+
+For a point $P$ and a triangular mesh $M$, the winding number $w(P)$ is defined by the solid angle integral:
+
+$$w(P) = \sum_{f \in M} \frac{\Omega_f(P)}{4\pi}$$
+
+Where $\Omega_f(P)$ is the signed solid angle of face $f$ subtended at point $P$. 
+*   **$w(P) \approx 1$:** The point is inside the mesh.
+*   **$w(P) \approx 0$:** The point is outside.
+*   Values between 0 and 1 occur near boundaries or holes, providing a "fuzzy" or robust classification for imperfect meshes.
 
 ---
 
 ## Implementation Details in Easy3D
 
-Easy3D uses discrete differential geometry operators to estimate these values on triangular meshes. The implementation is primarily based on:
+### Curvature Estimation
+Easy3D uses discrete differential geometry operators to estimate these values on triangular meshes:
 1.  **Discrete Laplace-Beltrami Operator** (Meyer et al. 2003): Using the "cotangent weight" formulation to estimate the mean curvature vector.
 2.  **Angle Deficit Method:** Commonly used for Gaussian curvature, where the curvature at a vertex is $2\pi$ minus the sum of the angles of incident faces.
-3.  **Curvature Tensor Estimation:** A more robust method (implemented via `analyze_tensor`) that uses the Normal Cycle Theory to compute the full curvature tensor, providing principal curvatures and principal directions through eigen-decomposition.
+3.  **Curvature Tensor Estimation:** A more robust method (implemented via `analyze_tensor`) that uses the Normal Cycle Theory to compute the full curvature tensor.
+
+### Tessellation and Winding
+The `Tessellator` and `csg::tessellate` utilities use winding rules to handle complex polygon structures during mesh construction and rendering. This is particularly critical for font rendering (`TextMesher`) and polygon partitioning.
 
 ---
-**Reference:** 
-*Cohen-Steiner, David, and Jean-Marie Morvan. "Restricted Delaunay triangulations and normal cycle." Proceedings of the nineteenth annual symposium on Computational geometry. 2003.*
+**References:** 
+- *Cohen-Steiner, D., and Morvan, J-M. "Restricted Delaunay triangulations and normal cycle." 2003.*
+- *Meyer, M. et al. "Discrete Differential-Geometry Operators for Triangulated 2-Manifolds." 2003.*
+- *Barill, G. et al. "Fast Winding Numbers for Soups and Clouds." 2018.*
