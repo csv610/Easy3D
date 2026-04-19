@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     args::ArgumentParser parser("Delaunay Triangulation 3D");
 
     args::Positional<std::string> input_file(parser, "input", "Input point cloud or mesh file");
-    args::Positional<std::string> output_file(parser, "output", "Output mesh file (default: convex.off)");
+    args::Positional<std::string> output_file(parser, "output", "Output mesh file (default: del3d.off)");
     args::HelpFlag help(parser, "help", "Display this help message", {'h', "help"});
 
     try {
@@ -102,7 +102,7 @@ int main(int argc, char** argv) {
     if (output_file) {
         out_path = args::get(output_file);
     } else {
-        out_path = "convex.off";
+        out_path = "del3d.off";
     }
 
     if (SurfaceMeshIO::save(out_path, out_mesh.get())) {
