@@ -39,6 +39,7 @@ This document provides a comprehensive list of algorithms implemented and used i
 | Algorithm | Description | Key Class/Function |
 |-----------|-------------|--------------------|
 | **Delaunay Triangulation** | Computes the Delaunay triangulation for 2D or 3D point sets to create optimal triangular or tetrahedral meshes. | `Delaunay2D`, `Delaunay3D` |
+| **Voronoi Diagram** | Computes the dual Voronoi diagram for 2D or 3D point sets, representing regions of proximity as cells. | `Delaunay2D`, `Delaunay3D` |
 | **Polygon Partition** | Decomposes complex polygons into simpler convex pieces to facilitate efficient geometric computations. | `PolygonPartition` |
 | **Tessellation** | Robustly triangulates complex polygons including those with holes or self-intersections. | `Tessellator` |
 | **Collision Detection** | Detects geometric intersections and computes distances between different 3D models or primitives. | `Collider` |

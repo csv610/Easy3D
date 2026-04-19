@@ -44,6 +44,17 @@ target_include_directories(delaunay_3d PRIVATE ${Easy3D_INCLUDE_DIR} ${Easy3D_TH
 target_link_libraries(delaunay_3d PRIVATE easy3d::core easy3d::fileio easy3d::algo easy3d::util)
 set_target_properties(delaunay_3d PROPERTIES FOLDER "apps")
 
+# Voronoi
+add_executable(voronoi_2d ${Easy3D_ROOT}/apps/voronoi_2d.cpp)
+target_include_directories(voronoi_2d PRIVATE ${Easy3D_INCLUDE_DIR} ${Easy3D_THIRD_PARTY}/args)
+target_link_libraries(voronoi_2d PRIVATE easy3d::core easy3d::fileio easy3d::algo easy3d::util)
+set_target_properties(voronoi_2d PROPERTIES FOLDER "apps")
+
+add_executable(voronoi_3d ${Easy3D_ROOT}/apps/voronoi_3d.cpp)
+target_include_directories(voronoi_3d PRIVATE ${Easy3D_INCLUDE_DIR} ${Easy3D_THIRD_PARTY}/args)
+target_link_libraries(voronoi_3d PRIVATE easy3d::core easy3d::fileio easy3d::algo easy3d::util)
+set_target_properties(voronoi_3d PROPERTIES FOLDER "apps")
+
 # Mesh Processing
 add_executable(mesh_smoothing ${Easy3D_ROOT}/apps/mesh_smoothing.cpp)
 target_include_directories(mesh_smoothing PRIVATE ${Easy3D_INCLUDE_DIR} ${Easy3D_THIRD_PARTY}/args)

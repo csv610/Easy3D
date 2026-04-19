@@ -73,6 +73,8 @@ The `apps/` directory contains a comprehensive set of command-line tools for 3D 
 |------|-------------|
 | `delaunay_2d` | Compute 2D Delaunay triangulation |
 | `delaunay_3d` | Compute 3D Delaunay triangulation |
+| `voronoi_2d` | Compute 2D Voronoi diagram (finite edges) |
+| `voronoi_3d` | Compute 3D Voronoi diagram (finite facets) |
 | `polygon_partition` | Partition polygons into convex pieces |
 
 ## Building
