@@ -6,6 +6,7 @@
 #include <memory>
 #include <easy3d/util/resource.h>
 #include <easy3d/util/initializer.h>
+#include <easy3d/util/file_system.h>
 #include <args.hxx>
 
 using namespace easy3d;
@@ -13,7 +14,7 @@ using namespace easy3d;
 int main(int argc, char** argv) {
     args::ArgumentParser parser("Delaunay Triangulation 2D");
 
-    args::Positional<std::string> input_file(parser, "input", "Input point cloud file");
+    args::Positional<std::string> input_file(parser, "input", "Input point cloud or mesh file");
     args::Positional<std::string> output_file(parser, "output", "Output mesh file");
     args::HelpFlag help(parser, "help", "Display this help message", {'h', "help"});
 
@@ -37,18 +38,36 @@ int main(int argc, char** argv) {
         file_path = resource::directory() + "/data/bunny.bin";
     }
 
-    std::unique_ptr<PointCloud> cloud(PointCloudIO::load(file_path));
-    if (!cloud) {
-        LOG(ERROR) << "failed to load point cloud from: " << file_path;
-        return EXIT_FAILURE;
+    std::vector<vec2> pts;
+    std::string input_ext = file_system::extension(file_path, true);
+
+    // Try loading as point cloud first for typical PC formats
+    if (input_ext == "ply" || input_ext == "bin" || input_ext == "xyz" || input_ext == "las" || input_ext == "laz") {
+        std::unique_ptr<PointCloud> cloud(PointCloudIO::load(file_path));
+        if (cloud) {
+            std::cout << "point cloud loaded: " << cloud->n_vertices() << " points" << std::endl;
+            auto points = cloud->get_vertex_property<vec3>("v:point");
+            for (auto v : cloud->vertices()) {
+                pts.push_back(vec2(points[v].x, points[v].y));
+            }
+        }
+    } 
+
+    // If not loaded yet, try as surface mesh
+    if (pts.empty()) {
+        std::unique_ptr<SurfaceMesh> mesh(SurfaceMeshIO::load(file_path));
+        if (mesh) {
+            std::cout << "surface mesh loaded: " << mesh->n_vertices() << " vertices" << std::endl;
+            for (auto v : mesh->vertices()) {
+                const vec3& p = mesh->position(v);
+                pts.push_back(vec2(p.x, p.y));
+            }
+        }
     }
 
-    std::cout << "point cloud loaded: " << cloud->n_vertices() << " points" << std::endl;
-
-    auto points = cloud->get_vertex_property<vec3>("v:point");
-    std::vector<vec2> pts;
-    for (auto v : cloud->vertices()) {
-        pts.push_back(vec2(points[v].x, points[v].y));
+    if (pts.empty()) {
+        LOG(ERROR) << "failed to load points from: " << file_path;
+        return EXIT_FAILURE;
     }
 
     std::cout << "computing Delaunay triangulation 2D..." << std::endl;
@@ -59,14 +78,14 @@ int main(int argc, char** argv) {
     std::cout << "  vertices: " << delaunay.nb_vertices() << std::endl;
     std::cout << "  triangles: " << delaunay.nb_triangles() << std::endl;
 
-    std::unique_ptr<SurfaceMesh> mesh(new SurfaceMesh);
+    std::unique_ptr<SurfaceMesh> out_mesh(new SurfaceMesh);
     for (unsigned int i = 0; i < delaunay.nb_vertices(); ++i) {
-        mesh->add_vertex(vec3(delaunay.vertex(i).x, delaunay.vertex(i).y, 0.0f));
+        out_mesh->add_vertex(vec3(delaunay.vertex(i).x, delaunay.vertex(i).y, 0.0f));
     }
 
     const int* tri_to_v = delaunay.tri_to_v();
     for (unsigned int i = 0; i < delaunay.nb_triangles(); ++i) {
-        mesh->add_triangle(
+        out_mesh->add_triangle(
             SurfaceMesh::Vertex(tri_to_v[3 * i]),
             SurfaceMesh::Vertex(tri_to_v[3 * i + 1]),
             SurfaceMesh::Vertex(tri_to_v[3 * i + 2])
@@ -80,7 +99,7 @@ int main(int argc, char** argv) {
         out_path = file_path.substr(0, file_path.find_last_of('.')) + "_delaunay_2d.obj";
     }
 
-    if (SurfaceMeshIO::save(out_path, mesh.get())) {
+    if (SurfaceMeshIO::save(out_path, out_mesh.get())) {
         std::cout << "saved to: " << out_path << std::endl;
     } else {
         std::cerr << "failed to save to: " << out_path << std::endl;
