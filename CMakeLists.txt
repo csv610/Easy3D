@@ -251,7 +251,7 @@ if (Easy3D_BUILD_TESTS)
     add_subdirectory(tests)
 endif ()
 
-add_subdirectory(applications)
+add_subdirectory(apps)
 
 ################################################################################
 

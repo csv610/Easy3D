@@ -194,7 +194,7 @@ else ()
     add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_HEADERS} ${${PROJECT_NAME}_SOURCES} ${${PROJECT_NAME}_FORMS} ${${PROJECT_NAME}_RESOURCES})
 endif ()
 
-set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "applications")
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "apps")
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${Easy3D_INCLUDE_DIR})
 
