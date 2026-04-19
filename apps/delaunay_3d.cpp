@@ -3,6 +3,7 @@
 #include <easy3d/fileio/point_cloud_io.h>
 #include <easy3d/fileio/surface_mesh_io.h>
 #include <easy3d/algo/delaunay_3d.h>
+#include <easy3d/algo/point_cloud_simplification.h>
 #include <memory>
 #include <easy3d/util/resource.h>
 #include <easy3d/util/initializer.h>
@@ -38,33 +39,46 @@ int main(int argc, char** argv) {
         file_path = resource::directory() + "/data/bunny.bin";
     }
 
-    std::vector<vec3> pts;
+    std::unique_ptr<PointCloud> cloud;
     std::string input_ext = file_system::extension(file_path, true);
 
     // Try loading as point cloud first for typical PC formats
     if (input_ext == "ply" || input_ext == "bin" || input_ext == "xyz" || input_ext == "las" || input_ext == "laz") {
-        std::unique_ptr<PointCloud> cloud(PointCloudIO::load(file_path));
+        cloud.reset(PointCloudIO::load(file_path));
         if (cloud) {
             std::cout << "point cloud loaded: " << cloud->n_vertices() << " points" << std::endl;
-            pts = cloud->points();
         }
     }
 
-    // If not loaded yet, try as surface mesh
-    if (pts.empty()) {
+    // If not loaded yet, try as surface mesh and convert to point cloud
+    if (!cloud) {
         std::unique_ptr<SurfaceMesh> mesh(SurfaceMeshIO::load(file_path));
         if (mesh) {
             std::cout << "surface mesh loaded: " << mesh->n_vertices() << " vertices" << std::endl;
+            cloud = std::make_unique<PointCloud>();
             for (auto v : mesh->vertices()) {
-                pts.push_back(mesh->position(v));
+                cloud->add_vertex(mesh->position(v));
             }
         }
     }
 
-    if (pts.empty()) {
+    if (!cloud || cloud->n_vertices() == 0) {
         LOG(ERROR) << "failed to load points from: " << file_path;
         return EXIT_FAILURE;
     }
+
+    // Remove duplicates
+    std::cout << "removing duplicate points..." << std::endl;
+    auto to_delete = PointCloudSimplification::uniform_simplification(cloud.get(), 1e-6f);
+    if (!to_delete.empty()) {
+        cloud->delete_vertices(to_delete);
+        cloud->collect_garbage();
+        std::cout << "  " << to_delete.size() << " duplicate points removed. " << cloud->n_vertices() << " unique points remain." << std::endl;
+    } else {
+        std::cout << "  no duplicate points found." << std::endl;
+    }
+
+    const std::vector<vec3>& pts = cloud->points();
 
     std::cout << "computing Delaunay triangulation 3D..." << std::endl;
     Delaunay3 delaunay;
