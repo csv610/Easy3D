@@ -23,9 +23,20 @@ This port differs from the original:
 - Modern C++ with smart pointers (`std::unique_ptr`, `std::shared_ptr`)
 - Simplified build process
 
+## Supported I/O
+
+Easy3D-M1 supports a wide range of 3D data formats:
+
+| Type | Supported Formats (File Extensions) |
+|------|------------------------------------|
+| **Point Cloud** | `.ply`, `.bin`, `.xyz`, `.bxyz`, `.las`, `.laz`, `.vg`, `.bvg` |
+| **Surface Mesh** | `.obj`, `.off`, `.ply`, `.stl`, `.sm`, `.geojson`, `.trilist` |
+| **Polyhedral Mesh** | `.mesh`, `.plm`, `.pm` |
+| **Graph** | `.ply` |
+
 ## CLI Applications
 
-The `applications/` directory contains a comprehensive set of command-line tools for 3D data processing:
+The `apps/` directory contains a comprehensive set of command-line tools for 3D data processing:
 
 ### Input / Output
 | Tool | Description |
