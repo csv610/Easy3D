@@ -293,6 +293,14 @@ namespace easy3d {
         /// @brief deletes the vertex \c v from the cloud
         void delete_vertex(Vertex v);
 
+        /// @brief deletes a list of vertices from the cloud 
+        void delete_vertices(const std::vector<Vertex>& vertices) 
+        { 
+            for (auto v : vertices) 
+                delete_vertex(v); 
+        } 
+
+
         /// @brief returns whether vertex \c v is deleted
         /// \sa collect_garbage()
         bool is_deleted(Vertex v) const
